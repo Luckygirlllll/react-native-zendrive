@@ -1,0 +1,20 @@
+{
+  "name": "react-native-zendrive",
+  "version": "1.0.0",
+  "description": "A React Native client for zendrive",
+  "main": "./lib/zendriveClient.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tkulpa/react-native-zendrive.git"
+  },
+  "author": "Tomasz Kulpa",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tkulpa/react-native-zendrive/issues"
+  },
+  "homepage": "https://github.com/tkulpa/react-native-intercom",
+  "dependencies": {}
+}

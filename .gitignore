@@ -1,0 +1,14 @@
+build/
+
+# Android/IJ
+#
+**/.idea/
+.idea/
+.gradle
+local.properties
+*.iml
+*.iws
+*.ipr
+node_modules
+
+*xcuserdata
