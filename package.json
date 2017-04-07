@@ -2,7 +2,6 @@
   "name": "react-native-zendrive",
   "version": "1.0.0",
   "description": "A React Native client for zendrive",
-  "main": "./lib/zendriveClient.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,6 +14,6 @@
   "bugs": {
     "url": "https://github.com/tkulpa/react-native-zendrive/issues"
   },
-  "homepage": "https://github.com/tkulpa/react-native-intercom",
+  "homepage": "https://github.com/tkulpa/react-native-zendrive",
   "dependencies": {}
 }
