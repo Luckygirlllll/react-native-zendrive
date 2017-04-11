@@ -3,6 +3,9 @@ package com.tkulpa.react.Zendrive;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.Callback;
 
 import android.util.Log;
 
@@ -12,6 +15,9 @@ import com.zendrive.sdk.ZendriveDriveDetectionMode;
 import com.zendrive.sdk.ZendriveDriverAttributes;
 import com.zendrive.sdk.ZendriveOperationResult;
 import com.zendrive.sdk.ZendriveOperationCallback;
+import com.zendrive.sdk.ZendriveAccidentConfidence;
+
+import javax.annotation.Nullable;
 
 public class ZendriveModule extends ReactContextBaseJavaModule {
 
@@ -28,65 +34,81 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public ZendriveOperationResult init(String key, String driverId, String driverFirstName, String driverLastName,
-			String driverEmail, String driverPhoneNumber) {
+	public void init(String key, String driverId, ReadableMap driver, final Callback callback) {
 		ZendriveDriverAttributes driverAttributes = new ZendriveDriverAttributes();
-		driverAttributes.setFirstName(driverFirstName);
-		driverAttributes.setLastName(driverLastName);
-		driverAttributes.setEmail(driverEmail);
-		driverAttributes.setPhoneNumber(driverPhoneNumber);
+		if (driver.hasKey("firstName")) {
+			driverAttributes.setFirstName(driver.getString("firstName"));
+		} else {
+			driverAttributes.setFirstName("unknown");
+		}
+		if (driver.hasKey("lastName")) {
+			driverAttributes.setLastName(driver.getString("lastName"));
+		} else {
+			driverAttributes.setLastName("unknown");
+		}
+		if (driver.hasKey("email")) {
+			driverAttributes.setEmail(driver.getString("email"));
+		} else {
+			driverAttributes.setEmail("unknown");
+		}
+		if (driver.hasKey("phoneNumber")) {
+			driverAttributes.setPhoneNumber(driver.getString("phoneNumber"));
+		} else {
+			driverAttributes.setPhoneNumber("unknown");
+		}
 		ZendriveConfiguration zendriveConfiguration = new ZendriveConfiguration(key, driverId);
 		zendriveConfiguration.setDriverAttributes(driverAttributes);
 
-		Zendrive.setup(this.getReactApplicationContext(), zendriveConfiguration, WrapperZendriveIntentService.class, new ZendriveOperationCallback() {
-			@Override
-			public void onCompletion(ZendriveOperationResult result) {
-				return result;
-			}
-		});
+		Zendrive.setup(this.getReactApplicationContext(), zendriveConfiguration, null, //WrapperZendriveIntentService.class
+				new ZendriveOperationCallback() {
+					@Override
+					public void onCompletion(ZendriveOperationResult result) {
+						callback.invoke(null, result);
+					}
+				});
 	}
 
-	public ZendriveOperationResult setAutoDriveDetectionMode(Boolean enabled) {
-		Integer driveDetectionMode;
+	public void setAutoDriveDetectionMode(Boolean enabled, final Callback callback) {
+		ZendriveDriveDetectionMode driveDetectionMode;
 		if (enabled) {
 			driveDetectionMode = ZendriveDriveDetectionMode.AUTO_ON;
 		} else {
 			driveDetectionMode = ZendriveDriveDetectionMode.AUTO_OFF;
 		}
 
-		Zendrive.setDriveDetectionMode(driveDetectionMode, new ZendriveOperationCallback() {
+		Zendrive.setZendriveDriveDetectionMode(driveDetectionMode, new ZendriveOperationCallback() {
 			@Override
 			public void onCompletion(ZendriveOperationResult result) {
-				return result;
+				callback.invoke(null, result);
 			}
 		});
 	}
 
-	public ZendriveOperationResult shutdown() {
+	public void shutdown(final Callback callback) {
 		Zendrive.teardown(new ZendriveOperationCallback() {
 			@Override
 			public void onCompletion(ZendriveOperationResult result) {
-				return result;
+				callback.invoke(null, result);
 			}
 		});
 	}
 
 	@ReactMethod
-	public ZendriveOperationResult startTrip(String id) {
+	public void startTrip(String id, final Callback callback) {
 		Zendrive.startDrive(id, new ZendriveOperationCallback() {
 			@Override
 			public void onCompletion(ZendriveOperationResult result) {
-				return result;
+				callback.invoke(null, result);
 			}
 		});
 	}
 
 	@ReactMethod
-	public ZendriveOperationResult stopTrip(String id) {
+	public void stopTrip(String id, final Callback callback) {
 		Zendrive.stopDrive(id, new ZendriveOperationCallback() {
 			@Override
 			public void onCompletion(ZendriveOperationResult result) {
-				return result;
+				callback.invoke(null, result);
 			}
 		});
 	}
@@ -102,25 +124,24 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public ZendriveOperationResult triggerMockAccident() {
+	public void triggerMockAccident(final Callback callback) {
 		Zendrive.triggerMockAccident(this.getReactApplicationContext(), ZendriveAccidentConfidence.HIGH,
 				new ZendriveOperationCallback() {
 					@Override
 					public void onCompletion(ZendriveOperationResult result) {
-						return result;
+						callback.invoke(null, result);
 					}
 				});
 	}
 
 	@ReactMethod
 	public void startForeground(int notificationId) {
-		android.app.Notification notification = createTrackingNotification(context.getApplicationContext());
 		Zendrive.startForeground(notificationId, null);
 	}
 
 	@ReactMethod
-	public void stopForeground() {
-		Zendrive.stopForeground();
+	public void stopForeground(Boolean removeNotification) {
+		Zendrive.stopForeground(removeNotification);
 	}
 
 }
