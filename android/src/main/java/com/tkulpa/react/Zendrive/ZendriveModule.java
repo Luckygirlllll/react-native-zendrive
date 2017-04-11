@@ -15,78 +15,112 @@ import com.zendrive.sdk.ZendriveOperationCallback;
 
 public class ZendriveModule extends ReactContextBaseJavaModule {
 
-    private static final String MODULE_NAME = "ZendriveWrapper";
-    public static final String TAG = "Zendrive";
+	private static final String MODULE_NAME = "ZendriveWrapper";
+	public static final String TAG = "Zendrive";
 
+	public ZendriveModule(ReactApplicationContext reactContext) {
+		super(reactContext);
+	}
 
-    public ZendriveModule(ReactApplicationContext reactContext) {
-        super(reactContext);
-    }
+	@Override
+	public String getName() {
+		return MODULE_NAME;
+	}
 
-    @Override
-    public String getName() {
-        return MODULE_NAME;
-    }
-	
 	@ReactMethod
-    public void init(String key, String driverId) {
+	public ZendriveOperationResult init(String key, String driverId, String driverFirstName, String driverLastName,
+			String driverEmail, String driverPhoneNumber) {
 		ZendriveDriverAttributes driverAttributes = new ZendriveDriverAttributes();
-		driverAttributes.setFirstName("Antoine");
-		driverAttributes.setLastName("Niyigena");
-		driverAttributes.setEmail("homer@springfield.com");
-		driverAttributes.setPhoneNumber("787488389");
-		ZendriveConfiguration zendriveConfiguration = new ZendriveConfiguration(
-			key, driverId);   // an unique id of the driver specific to your application
+		driverAttributes.setFirstName(driverFirstName);
+		driverAttributes.setLastName(driverLastName);
+		driverAttributes.setEmail(driverEmail);
+		driverAttributes.setPhoneNumber(driverPhoneNumber);
+		ZendriveConfiguration zendriveConfiguration = new ZendriveConfiguration(key, driverId);
 		zendriveConfiguration.setDriverAttributes(driverAttributes);
 
-		Zendrive.setup(
-			this.getReactApplicationContext(),
-			zendriveConfiguration,
-			null,        // can be null.
-			new ZendriveOperationCallback() {
-				@Override
-				public void onCompletion(ZendriveOperationResult result) {
-					if (result.isSuccess()) {
-						Log.e(TAG, "Success");
-					} else {
-						Log.e(TAG, "Failure");
+		Zendrive.setup(this.getReactApplicationContext(), zendriveConfiguration, WrapperZendriveIntentService.class, new ZendriveOperationCallback() {
+			@Override
+			public void onCompletion(ZendriveOperationResult result) {
+				return result;
+			}
+		});
+	}
+
+	public ZendriveOperationResult setAutoDriveDetectionMode(Boolean enabled) {
+		Integer driveDetectionMode;
+		if (enabled) {
+			driveDetectionMode = ZendriveDriveDetectionMode.AUTO_ON;
+		} else {
+			driveDetectionMode = ZendriveDriveDetectionMode.AUTO_OFF;
+		}
+
+		Zendrive.setDriveDetectionMode(driveDetectionMode, new ZendriveOperationCallback() {
+			@Override
+			public void onCompletion(ZendriveOperationResult result) {
+				return result;
+			}
+		});
+	}
+
+	public ZendriveOperationResult shutdown() {
+		Zendrive.teardown(new ZendriveOperationCallback() {
+			@Override
+			public void onCompletion(ZendriveOperationResult result) {
+				return result;
+			}
+		});
+	}
+
+	@ReactMethod
+	public ZendriveOperationResult startTrip(String id) {
+		Zendrive.startDrive(id, new ZendriveOperationCallback() {
+			@Override
+			public void onCompletion(ZendriveOperationResult result) {
+				return result;
+			}
+		});
+	}
+
+	@ReactMethod
+	public ZendriveOperationResult stopTrip(String id) {
+		Zendrive.stopDrive(id, new ZendriveOperationCallback() {
+			@Override
+			public void onCompletion(ZendriveOperationResult result) {
+				return result;
+			}
+		});
+	}
+
+	@ReactMethod
+	public void startSession(String id) {
+		Zendrive.startSession(id);
+	}
+
+	@ReactMethod
+	public void stopSession(String id) {
+		Zendrive.stopSession();
+	}
+
+	@ReactMethod
+	public ZendriveOperationResult triggerMockAccident() {
+		Zendrive.triggerMockAccident(this.getReactApplicationContext(), ZendriveAccidentConfidence.HIGH,
+				new ZendriveOperationCallback() {
+					@Override
+					public void onCompletion(ZendriveOperationResult result) {
+						return result;
 					}
-				}
-			}
-		);
-    }
-	
-	@ReactMethod
-    public void startTrip(String id) {
-	Zendrive.startDrive(id,
-		new ZendriveOperationCallback() {
-			@Override
-			public void onCompletion(ZendriveOperationResult result) {
-				if (result.isSuccess()) {
-					Log.e(TAG, "Trip start: Success");
-				} else { 
-					Log.e(TAG, "Trip start: Failure");
-				}
-			}
-		}
-	);
+				});
 	}
-	
+
 	@ReactMethod
-    public void stopTrip(String id) {
-	Zendrive.stopDrive(id,
-		new ZendriveOperationCallback() {
-			@Override
-			public void onCompletion(ZendriveOperationResult result) {
-				if (result.isSuccess()) {
-					Log.e(TAG, "Trip stop: Success");
-				} else { 
-					Log.e(TAG, "Trip stop: Failure");
-				}
-			}
-		}
-	);
+	public void startForeground(int notificationId) {
+		android.app.Notification notification = createTrackingNotification(context.getApplicationContext());
+		Zendrive.startForeground(notificationId, null);
 	}
-	
+
+	@ReactMethod
+	public void stopForeground() {
+		Zendrive.stopForeground();
+	}
 
 }
