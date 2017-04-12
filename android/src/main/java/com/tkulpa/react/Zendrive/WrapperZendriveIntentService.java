@@ -1,3 +1,5 @@
+package com.tkulpa.react.Zendrive;
+
 import com.zendrive.sdk.AccidentInfo;
 import com.zendrive.sdk.DriveInfo;
 import com.zendrive.sdk.DriveResumeInfo;
@@ -26,8 +28,8 @@ public class WrapperZendriveIntentService extends ZendriveIntentService {
 
     @Override
     public void onAccident(AccidentInfo accidentInfo) {
-        WritableMap params = Arguments.createMap();
-        sendEvent(ZENDRIVE_ACCIDENT_EVENT, params);
+        // WritableMap params = Arguments.createMap();
+        // sendEvent(ZENDRIVE_ACCIDENT_EVENT, params);
     }
 
     @Override
