@@ -19,4 +19,9 @@ public class RZendriveWrapperModule extends ReactContextBaseJavaModule {
   public String getName() {
     return "RZendriveWrapper";
   }
+
+  @ReactMethod
+	public void init(String key) {
+    return null;
+	}
 }
