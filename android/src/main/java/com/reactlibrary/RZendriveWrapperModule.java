@@ -22,6 +22,6 @@ public class RZendriveWrapperModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
 	public void init(String key) {
-    return null;
+    return;
 	}
 }
