@@ -31,7 +31,7 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 	@ReactMethod
 	public void init(String key, String driverId, ReadableMap driver, final Callback callback) {
 		ZendriveDriverAttributes zendriveDriverAttributes = new ZendriveDriverAttributes();
-		
+
 		ZendriveDriverAttributes driverAttributes = new ZendriveDriverAttributes();
  		driverAttributes.setFirstName(driver.getString("firstName"));
  		driverAttributes.setLastName(driver.getString("lastName"));
@@ -40,7 +40,7 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
  		ZendriveConfiguration zendriveConfiguration = new ZendriveConfiguration(
  			key, driverId);
  		zendriveConfiguration.setDriverAttributes(driverAttributes);
- 
+
  		Zendrive.setup(
  			this.getReactApplicationContext(),
  			zendriveConfiguration,
