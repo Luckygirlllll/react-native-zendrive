@@ -1,6 +1,5 @@
 package com.tkulpa.react.Zendrive;
 
-import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableNativeArray;
 import com.zendrive.sdk.AccidentInfo;
 import com.zendrive.sdk.AnalyzedDriveInfo;
@@ -13,16 +12,10 @@ import com.zendrive.sdk.ZendriveLocationSettingsResult;
 import android.content.Context;
 import android.util.Log;
 
-import com.facebook.react.modules.core.DeviceEventManagerModule;
-import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.bridge.WritableArray;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nullable;
 
 public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver {
     public static final String TAG = "Zendrive";
@@ -40,7 +33,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         params.putString("confidence", accidentInfo.confidence.toString());
         params.putDouble("locationLat", accidentInfo.location.latitude);
         params.putDouble("locationLon", accidentInfo.location.longitude);
-        this.sendEvent(context, "accident", params);
+        ZendriveModule.sendEvent("accident", params);
     }
 
     @Override
@@ -52,7 +45,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         params.putDouble("starTimeMillis", ((Number) startInfo.startTimeMillis).doubleValue());
         params.putDouble("startLocationLat", startInfo.startLocation.latitude);
         params.putDouble("startLocationLon", startInfo.startLocation.longitude);
-        this.sendEvent(context, "driveStart", params);
+        ZendriveModule.sendEvent("driveStart", params);
     }
 
     @Override
@@ -63,7 +56,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         params.putString("trackingId", resumeInfo.trackingId);
         params.putDouble("driveGapStartTimestampMillis", resumeInfo.driveGapStartTimestampMillis);
         params.putDouble("driveGapEndTimestampMillis", resumeInfo.driveGapEndTimestampMillis);
-        this.sendEvent(context, "driveResume", params);
+        ZendriveModule.sendEvent("driveResume", params);
     }
 
     @Override
@@ -86,27 +79,27 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         // TODO: Events and waipoints mapping
 //        params.putMap("events", Arguments.fromArray());
 //        params.putMap("waypoints", Arguments.fromArray());
-        this.sendEvent(context, "driveEnd", params);
+        ZendriveModule.sendEvent("driveEnd", params);
     }
 
     @Override
     public void onLocationSettingsChange(Context context, ZendriveLocationSettingsResult locationSettingsResult) {
-        Log.i(TAG, "LocationSettingsChange detected");
         WritableMap params = new WritableNativeMap();
         WritableArray errorsList = new WritableNativeArray();
         for (ZendriveLocationSettingsResult.Error error: locationSettingsResult.errors) {
             errorsList.pushString(error.toString());
         }
         params.putArray("locationSettingsErrors", errorsList);
-        this.sendEvent(context, "locationSettingsChange", params);
+        ZendriveModule.sendEvent("locationSettingsChange", params);
+        Log.i(TAG, "LocationSettingsChange detected");
     }
 
     @Override
     public void onLocationPermissionsChange(Context context, boolean granted) {
-        Log.i(TAG, "LocationPermissionsChange detected");
         WritableMap params = new WritableNativeMap();
         params.putBoolean("granted", granted);
-        this.sendEvent(context, "locationPermissionsChange", params);
+        ZendriveModule.sendEvent("locationPermissionsChange", params);
+        Log.i(TAG, "LocationPermissionsChange detected");
     }
 
     @Override
@@ -129,18 +122,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         // TODO: Events and waipoints mapping
 //        params.putMap("events", Arguments.fromArray());
 //        params.putMap("waypoints", Arguments.fromArray());
-        this.sendEvent(context, "driveAnalyzed", params);
+        ZendriveModule.sendEvent("driveAnalyzed", params);
     }
 
-    private void sendEvent(Context context, String eventName, @Nullable WritableMap params) {
-        ReactApplicationContext reactContext = new ReactApplicationContext(context);
-        if (reactContext.hasActiveCatalystInstance()) {
-            try {
-                reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                        .emit(eventName, params);
-            } catch (Exception e) {
-                Log.e(TAG, "sendEvent called before bundle loaded");
-            }
-        }
-    }
 }
