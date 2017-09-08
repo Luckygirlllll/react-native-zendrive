@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="location_permission">Permissão de localização</string>
+    <string name="location_permission_denied">Permissão de localização negada</string>
+    <string name="grant_location_permission">Conceda permissão de localização ao App da P2P Seguros</string>
+
+    <string name="location_disabled">Localização desligada</string>
+    <string name="enable_location">Habilitar localização de precisão</string>
+</resources>

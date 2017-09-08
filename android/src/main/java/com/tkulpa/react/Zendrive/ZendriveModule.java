@@ -42,10 +42,11 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
  		zendriveConfiguration.setDriverAttributes(driverAttributes);
 
  		Zendrive.setup(
- 			this.getReactApplicationContext(),
- 			zendriveConfiguration,
- 			WrapperZendriveIntentService.class,
- 			new CallbackWrapper(callback)
+			this.getReactApplicationContext(),
+			zendriveConfiguration,
+				WrapperZendriveBroadcastReceiver.class,
+				WrapperZendriveNotificationProvider.class,
+			new CallbackWrapper(callback)
  		);
 	}
 
@@ -98,14 +99,14 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 		}
 	}
 
-	@ReactMethod
-	public void startForeground(int notificationId) {
-		Zendrive.startForeground(notificationId, null);
-	}
-
-	@ReactMethod
-	public void stopForeground(Boolean removeNotification) {
-		Zendrive.stopForeground(removeNotification);
-	}
+//	@ReactMethod
+//	public void startForeground(int notificationId) {
+//		Zendrive.startForeground(notificationId, null);
+//	}
+//
+//	@ReactMethod
+//	public void stopForeground(Boolean removeNotification) {
+//		Zendrive.stopForeground(removeNotification);
+//	}
 
 }

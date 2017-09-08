@@ -2,6 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.tkulpa.react.Zendrive" >
     <application>
-        <service android:name=".WrapperZendriveIntentService" />
+        <receiver android:name=".WrapperZendriveBroadcastReceiver" />
     </application>
 </manifest>
