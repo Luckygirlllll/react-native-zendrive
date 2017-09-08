@@ -6,7 +6,7 @@ import com.zendrive.sdk.ZendriveOperationCallback;
 import com.zendrive.sdk.ZendriveOperationResult;
 
 public class CallbackWrapper implements ZendriveOperationCallback {
-    
+
     private Callback callback;
 
     public CallbackWrapper(Callback jsCallback) {
@@ -17,9 +17,9 @@ public class CallbackWrapper implements ZendriveOperationCallback {
     @Override
     public void onCompletion(ZendriveOperationResult result) {
         if (result.isSuccess()) {
-            callback.invoke(true);
+            callback.invoke(false, result.toString());
         } else {
-            callback.invoke(false, result.getErrorCode());
+            callback.invoke(result.getErrorCode().toString());
         }
     }
 }

@@ -5,6 +5,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableMap;
+import android.util.Log;
 
 import com.zendrive.sdk.Zendrive;
 import com.zendrive.sdk.ZendriveConfiguration;
@@ -31,14 +32,13 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 	@ReactMethod
 	public void init(String key, String driverId, ReadableMap driver, final Callback callback) {
 		ZendriveDriverAttributes zendriveDriverAttributes = new ZendriveDriverAttributes();
-
 		ZendriveDriverAttributes driverAttributes = new ZendriveDriverAttributes();
  		driverAttributes.setFirstName(driver.getString("firstName"));
  		driverAttributes.setLastName(driver.getString("lastName"));
  		driverAttributes.setEmail(driver.getString("email"));
- 		driverAttributes.setPhoneNumber(driver.getString("phoneNumber"));
- 		ZendriveConfiguration zendriveConfiguration = new ZendriveConfiguration(
- 			key, driverId);
+ 	// 	driverAttributes.setPhoneNumber(driver.getString("phoneNumber"));
+
+ 		ZendriveConfiguration zendriveConfiguration = new ZendriveConfiguration(key, driverId);
  		zendriveConfiguration.setDriverAttributes(driverAttributes);
 
  		Zendrive.setup(
