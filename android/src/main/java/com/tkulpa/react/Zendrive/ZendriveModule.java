@@ -31,7 +31,8 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 	}
 
     public static void sendEvent(String eventName, @Nullable WritableMap params) {
-        if (reactContext.hasActiveCatalystInstance()) {
+
+        if (reactContext != null && reactContext.hasActiveCatalystInstance()) {
             try {
                 reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                         .emit(eventName, params);
@@ -39,6 +40,8 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
             } catch (Exception e) {
                 Log.e(TAG, "sendEvent called before bundle loaded");
             }
+        } else {
+          Log.i(TAG, "could not emit " + eventName + " because there's no active context");
         }
     }
 
