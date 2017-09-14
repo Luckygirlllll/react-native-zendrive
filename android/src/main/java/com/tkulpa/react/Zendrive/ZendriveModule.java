@@ -2,11 +2,13 @@ package com.tkulpa.react.Zendrive;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReadableMap;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -30,18 +32,25 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
         this.reactContext = reactContext;
 	}
 
-    public static void sendEvent(String eventName, @Nullable WritableMap params) {
+    public static void sendEvent(String eventName, @Nullable WritableMap params, Context context) {
+		ReactContext rContext;
+		if(reactContext == null) {
+			Log.e(TAG, "no available ReactContext, trying to create from Context");
+			rContext = new ReactApplicationContext(context);
+		} else {
+			rContext = reactContext;
+		}
 
-        if (reactContext != null && reactContext.hasActiveCatalystInstance()) {
+        if (rContext != null && rContext.hasActiveCatalystInstance()) {
             try {
-                reactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+				rContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
                         .emit(eventName, params);
                 Log.d(TAG, "sendEvent success (eventName: " + eventName + ")");
             } catch (Exception e) {
                 Log.e(TAG, "sendEvent called before bundle loaded");
             }
         } else {
-          Log.i(TAG, "could not emit " + eventName + " because there's no active context");
+          Log.i(TAG, "could not emit " + eventName + ". No available ReactContext");
         }
     }
 
@@ -120,15 +129,4 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 			callback.invoke(false, e.getMessage());
 		}
 	}
-
-//	@ReactMethod
-//	public void startForeground(int notificationId) {
-//		Zendrive.startForeground(notificationId, null);
-//	}
-//
-//	@ReactMethod
-//	public void stopForeground(Boolean removeNotification) {
-//		Zendrive.stopForeground(removeNotification);
-//	}
-
 }

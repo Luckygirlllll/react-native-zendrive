@@ -33,7 +33,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         params.putString("confidence", accidentInfo.confidence.toString());
         params.putDouble("locationLat", accidentInfo.location.latitude);
         params.putDouble("locationLon", accidentInfo.location.longitude);
-        ZendriveModule.sendEvent("accident", params);
+        ZendriveModule.sendEvent("accident", params, context);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         params.putDouble("starTimeMillis", ((Number) startInfo.startTimeMillis).doubleValue());
         params.putDouble("startLocationLat", startInfo.startLocation.latitude);
         params.putDouble("startLocationLon", startInfo.startLocation.longitude);
-        ZendriveModule.sendEvent("driveStart", params);
+        ZendriveModule.sendEvent("driveStart", params, context);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         params.putString("trackingId", resumeInfo.trackingId);
         params.putDouble("driveGapStartTimestampMillis", resumeInfo.driveGapStartTimestampMillis);
         params.putDouble("driveGapEndTimestampMillis", resumeInfo.driveGapEndTimestampMillis);
-        ZendriveModule.sendEvent("driveResume", params);
+        ZendriveModule.sendEvent("driveResume", params, context);
     }
 
     @Override
@@ -79,27 +79,27 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         // TODO: Events and waipoints mapping
 //        params.putMap("events", Arguments.fromArray());
 //        params.putMap("waypoints", Arguments.fromArray());
-        ZendriveModule.sendEvent("driveEnd", params);
+        ZendriveModule.sendEvent("driveEnd", params, context);
     }
 
     @Override
     public void onLocationSettingsChange(Context context, ZendriveLocationSettingsResult locationSettingsResult) {
+        Log.i(TAG, "LocationSettingsChange detected");
         WritableMap params = new WritableNativeMap();
         WritableArray errorsList = new WritableNativeArray();
         for (ZendriveLocationSettingsResult.Error error: locationSettingsResult.errors) {
             errorsList.pushString(error.toString());
         }
         params.putArray("locationSettingsErrors", errorsList);
-        ZendriveModule.sendEvent("locationSettingsChange", params);
-        Log.i(TAG, "LocationSettingsChange detected");
+        ZendriveModule.sendEvent("locationSettingsChange", params, context);
     }
 
     @Override
     public void onLocationPermissionsChange(Context context, boolean granted) {
+        Log.i(TAG, "LocationPermissionsChange detected");
         WritableMap params = new WritableNativeMap();
         params.putBoolean("granted", granted);
-        ZendriveModule.sendEvent("locationPermissionsChange", params);
-        Log.i(TAG, "LocationPermissionsChange detected");
+        ZendriveModule.sendEvent("locationPermissionsChange", params, context);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         // TODO: Events and waipoints mapping
 //        params.putMap("events", Arguments.fromArray());
 //        params.putMap("waypoints", Arguments.fromArray());
-        ZendriveModule.sendEvent("driveAnalyzed", params);
+        ZendriveModule.sendEvent("driveAnalyzed", params, context);
     }
 
 }
