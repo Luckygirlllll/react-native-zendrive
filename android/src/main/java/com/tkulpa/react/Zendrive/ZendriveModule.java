@@ -50,7 +50,7 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
                 Log.e(TAG, "sendEvent called before bundle loaded");
             }
         } else {
-          Log.i(TAG, "could not emit " + eventName + ". No available ReactContext");
+          Log.e(TAG, "could not emit " + eventName + ". No available ReactContext");
         }
     }
 
@@ -72,7 +72,7 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
  		zendriveConfiguration.setDriverAttributes(driverAttributes);
         zendriveConfiguration.setDriveDetectionMode(ZendriveDriveDetectionMode.AUTO_ON);
 
- 		Zendrive.setup(
+		Zendrive.setup(
  				this.getReactApplicationContext(),
 				zendriveConfiguration,
 				WrapperZendriveBroadcastReceiver.class,
