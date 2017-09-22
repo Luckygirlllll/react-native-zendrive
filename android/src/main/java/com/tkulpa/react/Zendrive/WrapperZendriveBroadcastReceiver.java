@@ -37,6 +37,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
     }
 
     @Override
+
     public void onDriveStart(Context context, DriveStartInfo startInfo) {
         Log.i(TAG, "DriveStart detected");
         WritableMap params = new WritableNativeMap();
@@ -69,9 +70,9 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         params.putString("driveType", estimatedDriveInfo.driveType.toString());
         params.putString("userMode", estimatedDriveInfo.userMode.toString());
 
-        params.putInt("score", estimatedDriveInfo.score.zendriveScore);
-        params.putDouble("starTimeMillis", ((Number) estimatedDriveInfo.startTimeMillis).doubleValue());
-        params.putDouble("endTimeMillis", ((Number) estimatedDriveInfo.endTimeMillis).doubleValue());
+        params.putInt("zendriveScore", estimatedDriveInfo.score.zendriveScore);
+        params.putDouble("starTimeMillis", (double) estimatedDriveInfo.startTimeMillis);
+        params.putDouble("endTimeMillis", (double) estimatedDriveInfo.endTimeMillis);
         params.putDouble("averageSpeed", estimatedDriveInfo.averageSpeed);
         params.putDouble("distanceMeters", estimatedDriveInfo.distanceMeters);
         params.putDouble("maxSpeed", estimatedDriveInfo.maxSpeed);
@@ -112,9 +113,9 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         params.putString("driveType", analyzedDriverInfo.driveType.toString());
         params.putString("userMode", analyzedDriverInfo.userMode.toString());
 
-        params.putInt("score", analyzedDriverInfo.score.zendriveScore);
-        params.putDouble("starTimeMillis", ((Number) analyzedDriverInfo.startTimeMillis).doubleValue());
-        params.putDouble("endTimeMillis", ((Number) analyzedDriverInfo.endTimeMillis).doubleValue());
+        params.putInt("zendriveScore", analyzedDriverInfo.score.zendriveScore);
+        params.putDouble("starTimeMillis", (double) analyzedDriverInfo.startTimeMillis);
+        params.putDouble("endTimeMillis", (double) analyzedDriverInfo.endTimeMillis);
         params.putDouble("averageSpeed", analyzedDriverInfo.averageSpeed);
         params.putDouble("distanceMeters", analyzedDriverInfo.distanceMeters);
         params.putDouble("maxSpeed", analyzedDriverInfo.maxSpeed);

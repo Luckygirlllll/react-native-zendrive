@@ -14,45 +14,47 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.WritableNativeMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.zendrive.sdk.Zendrive;
 import com.zendrive.sdk.ZendriveConfiguration;
 import com.zendrive.sdk.ZendriveDriveDetectionMode;
 import com.zendrive.sdk.ZendriveDriverAttributes;
 import com.zendrive.sdk.ZendriveAccidentConfidence;
+import com.zendrive.sdk.ZendriveState;
 
 public class ZendriveModule extends ReactContextBaseJavaModule {
 
 	private static final String MODULE_NAME = "ZendriveWrapper";
 	public static final String TAG = "Zendrive";
-    private static ReactApplicationContext reactContext;
+	private static ReactApplicationContext reactContext;
 
 	public ZendriveModule(ReactApplicationContext reactContext) {
-        super(reactContext);
-        this.reactContext = reactContext;
+		super(reactContext);
+		this.reactContext = reactContext;
 	}
 
-    public static void sendEvent(String eventName, @Nullable WritableMap params, Context context) {
+	public static void sendEvent(String eventName, @Nullable WritableMap params, Context context) {
 		ReactContext rContext;
-		if(reactContext == null) {
+		if (reactContext == null) {
 			Log.e(TAG, "no available ReactContext, trying to create from Context");
 			rContext = new ReactApplicationContext(context);
 		} else {
 			rContext = reactContext;
 		}
 
-        if (rContext != null && rContext.hasActiveCatalystInstance()) {
-            try {
+		if (rContext != null && rContext.hasActiveCatalystInstance()) {
+			try {
 				rContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                        .emit(eventName, params);
-                Log.d(TAG, "sendEvent success (eventName: " + eventName + ")");
-            } catch (Exception e) {
-                Log.e(TAG, "sendEvent called before bundle loaded");
-            }
-        } else {
-          Log.e(TAG, "could not emit " + eventName + ". No available ReactContext");
-        }
-    }
+						.emit(eventName, params);
+				Log.d(TAG, "sendEvent success (eventName: " + eventName + ")");
+			} catch (Exception e) {
+				Log.e(TAG, "sendEvent called before bundle loaded");
+			}
+		} else {
+			Log.e(TAG, "could not emit " + eventName + ". No available ReactContext");
+		}
+	}
 
 	@Override
 	public String getName() {
@@ -63,22 +65,62 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 	public void init(String key, String driverId, ReadableMap driver, final Callback callback) {
 		ZendriveDriverAttributes zendriveDriverAttributes = new ZendriveDriverAttributes();
 		ZendriveDriverAttributes driverAttributes = new ZendriveDriverAttributes();
- 		driverAttributes.setFirstName(driver.getString("firstName"));
- 		driverAttributes.setLastName(driver.getString("lastName"));
- 		driverAttributes.setEmail(driver.getString("email"));
- 	// 	driverAttributes.setPhoneNumber(driver.getString("phoneNumber"));
+		driverAttributes.setFirstName(driver.getString("firstName"));
+		driverAttributes.setLastName(driver.getString("lastName"));
+		driverAttributes.setEmail(driver.getString("email"));
+		// 	driverAttributes.setPhoneNumber(driver.getString("phoneNumber"));
 
- 		ZendriveConfiguration zendriveConfiguration = new ZendriveConfiguration(key, driverId);
- 		zendriveConfiguration.setDriverAttributes(driverAttributes);
-        zendriveConfiguration.setDriveDetectionMode(ZendriveDriveDetectionMode.AUTO_ON);
+		ZendriveConfiguration zendriveConfiguration = new ZendriveConfiguration(key, driverId);
+		zendriveConfiguration.setDriverAttributes(driverAttributes);
+		zendriveConfiguration.setDriveDetectionMode(ZendriveDriveDetectionMode.AUTO_ON);
 
 		Zendrive.setup(
- 				this.getReactApplicationContext(),
+				this.getReactApplicationContext(),
 				zendriveConfiguration,
 				WrapperZendriveBroadcastReceiver.class,
 				WrapperZendriveNotificationProvider.class,
 				new CallbackWrapper(callback)
- 		);
+		);
+	}
+
+	@ReactMethod
+	public void isSetup(final Callback callback) {
+		callback.invoke(false, Zendrive.isSDKSetup());
+	}
+
+	@ReactMethod
+	public void getState(final Callback callback) {
+		ZendriveState zendriveState = Zendrive.getZendriveState();
+		WritableMap params = new WritableNativeMap();
+		params.putBoolean("isDriveInProgress", zendriveState.isDriveInProgress);
+		params.putBoolean("isForegroundService", zendriveState.isForegroundService);
+
+//		// TODO: Zendrive configuration serializer
+//		params.putBoolean("zendriveConfiguration", zendriveState.zendriveConfiguration);
+
+		callback.invoke(false, params);
+	}
+
+	@ReactMethod
+	public void startDrive(String id, final Callback callback) {
+		Zendrive.startDrive(id, new CallbackWrapper(callback));
+	}
+
+	@ReactMethod
+	public void stopDrive(String id, final Callback callback) {
+		Zendrive.stopDrive(id, new CallbackWrapper(callback));
+	}
+
+	@ReactMethod
+	public void triggerAccident(final Callback callback) {
+		if (!Zendrive.isAccidentDetectionSupported(this.getReactApplicationContext())) {
+			callback.invoke(false, "Zendrive collision detection is not supported on this device");
+		}
+		try {
+			Zendrive.triggerMockAccident(this.getReactApplicationContext(), ZendriveAccidentConfidence.HIGH, new CallbackWrapper(callback));
+		} catch (Exception e) {
+			callback.invoke(false, e.getMessage());
+		}
 	}
 
 	@ReactMethod
@@ -89,23 +131,12 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 		} else {
 			driveDetectionMode = ZendriveDriveDetectionMode.AUTO_OFF;
 		}
-
 		Zendrive.setZendriveDriveDetectionMode(driveDetectionMode, new CallbackWrapper(callback));
 	}
 
 	@ReactMethod
 	public void shutdown(final Callback callback) {
 		Zendrive.teardown(new CallbackWrapper(callback));
-	}
-
-	@ReactMethod
-	public void startTrip(String id, final Callback callback) {
-		Zendrive.startDrive(id, new CallbackWrapper(callback));
-	}
-
-	@ReactMethod
-	public void stopTrip(String id, final Callback callback) {
-		Zendrive.stopDrive(id, new CallbackWrapper(callback));
 	}
 
 	@ReactMethod
@@ -116,17 +147,5 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 	@ReactMethod
 	public void stopSession() {
 		Zendrive.stopSession();
-	}
-
-	@ReactMethod
-	public void triggerMockAccident(final Callback callback) {
-		if(!Zendrive.isAccidentDetectionSupported(this.getReactApplicationContext())) {
-			callback.invoke(false, "Zendrive collision detection is not supported on this device");
-		}
-		try {
-			Zendrive.triggerMockAccident(this.getReactApplicationContext(), ZendriveAccidentConfidence.HIGH, new CallbackWrapper(callback));
-		} catch (Exception e) {
-			callback.invoke(false, e.getMessage());
-		}
 	}
 }

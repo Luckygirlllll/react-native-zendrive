@@ -103,11 +103,11 @@ public class NotificationUtility {
         //noinspection deprecation
         return new NotificationCompat.Builder(context, FOREGROUND_CHANNEL_KEY)
                 .setSmallIcon(R.drawable.notification_template_icon_bg)
-                .setContentTitle("Zendrive")
+                .setContentTitle(context.getResources().getString(R.string.app_name))
                 .setDefaults(0)
                 .setPriority(Notification.PRIORITY_MIN)
                 .setCategory(Notification.CATEGORY_SERVICE)
-                .setContentText("Detecting possible drive.").build();
+                .setContentText(context.getResources().getString(R.string.possible_drive)).build();
     }
 
     /**
@@ -122,22 +122,22 @@ public class NotificationUtility {
 
         return new NotificationCompat.Builder(context, FOREGROUND_CHANNEL_KEY)
                 .setSmallIcon(R.drawable.notification_template_icon_bg)
-                .setContentTitle("Zendrive")
+                .setContentTitle(context.getResources().getString(R.string.app_name))
                 .setCategory(Notification.CATEGORY_SERVICE)
-                .setContentText("Drive started.").build();
+                .setContentText(context.getResources().getString(R.string.drive_started)).build();
     }
 
     private static void createNotificationChannels(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationManager manager = context.getSystemService(NotificationManager.class);
             NotificationChannel lowPriorityNotificationChannel = new NotificationChannel(FOREGROUND_CHANNEL_KEY,
-                    "Zendrive trip tracking",
+                    context.getResources().getString(R.string.trip_tracking),
                     NotificationManager.IMPORTANCE_MIN);
             lowPriorityNotificationChannel.setShowBadge(false);
             manager.createNotificationChannel(lowPriorityNotificationChannel);
 
             NotificationChannel defaultNotificationChannel = new NotificationChannel
-                    (LOCATION_CHANNEL_KEY, "Problems",
+                    (LOCATION_CHANNEL_KEY, context.getResources().getString(R.string.problems),
                             NotificationManager.IMPORTANCE_DEFAULT);
             defaultNotificationChannel.setShowBadge(true);
             manager.createNotificationChannel(defaultNotificationChannel);

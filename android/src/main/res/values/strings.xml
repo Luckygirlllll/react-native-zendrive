@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">P2P Seguros</string>
     <string name="location_permission">Permissão de localização</string>
     <string name="location_permission_denied">Permissão de localização negada</string>
     <string name="grant_location_permission">Conceda permissão de localização ao App da P2P Seguros</string>
 
     <string name="location_disabled">Localização desligada</string>
     <string name="enable_location">Habilitar localização de precisão</string>
+
+    <string name="possible_drive">Possível viagem detectada</string>
+    <string name="drive_started">Viagem começou</string>
+    <string name="trip_tracking">Detecção de viagem P2P</string>
+    <string name="problems">Problemas</string>
 </resources>
