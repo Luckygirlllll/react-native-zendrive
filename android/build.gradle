@@ -37,7 +37,7 @@ android {
 dependencies {
     compile 'com.facebook.react:react-native:+'
     compile 'com.google.android.gms:play-services-location:11.2.2'
-    compile 'com.zendrive.sdk.android:ZendriveSDK:5.0.0'
+    compile 'com.zendrive.sdk.android:ZendriveSDK:5.0.1-b-2'
     compile 'com.android.support:appcompat-v7:26.0.2'
 }
 
