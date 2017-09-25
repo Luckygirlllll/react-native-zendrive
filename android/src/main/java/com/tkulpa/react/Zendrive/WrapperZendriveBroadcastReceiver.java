@@ -22,7 +22,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
 
     @Override
     public void onAccident(Context context, AccidentInfo accidentInfo) {
-        Log.i(TAG, "Accident detected");
+        Log.i(TAG, "Accident detected: " + accidentInfo.toString());
         WritableMap params = new WritableNativeMap();
         params.putString("sessionId", accidentInfo.sessionId);
         params.putString("trackingId", accidentInfo.trackingId);
@@ -39,7 +39,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
     @Override
 
     public void onDriveStart(Context context, DriveStartInfo startInfo) {
-        Log.i(TAG, "DriveStart detected");
+        Log.i(TAG, "DriveStart detected: " + startInfo.toString());
         WritableMap params = new WritableNativeMap();
         params.putString("sessionId", startInfo.sessionId);
         params.putString("trackingId", startInfo.trackingId);
@@ -51,7 +51,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
 
     @Override
     public void onDriveResume(Context context, DriveResumeInfo resumeInfo) {
-        Log.i(TAG, "DriveResume detected");
+        Log.i(TAG, "DriveResume detected: " + resumeInfo.toString());
         WritableMap params = new WritableNativeMap();
         params.putString("sessionId", resumeInfo.sessionId);
         params.putString("trackingId", resumeInfo.trackingId);
@@ -62,13 +62,13 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
 
     @Override
     public void onDriveEnd(Context context, EstimatedDriveInfo estimatedDriveInfo) {
-        Log.i(TAG, "DriveEnd detected");
+        Log.i(TAG, "DriveEnd detected: " + estimatedDriveInfo.toString());
         WritableMap params = new WritableNativeMap();
         params.putString("sessionId", estimatedDriveInfo.sessionId);
         params.putString("trackingId", estimatedDriveInfo.trackingId);
         params.putString("driveId", estimatedDriveInfo.driveId);
         params.putString("driveType", estimatedDriveInfo.driveType.toString());
-        params.putString("userMode", estimatedDriveInfo.userMode.toString());
+//        params.putString("userMode", estimatedDriveInfo.userMode.toString());
 
         params.putInt("zendriveScore", estimatedDriveInfo.score.zendriveScore);
         params.putDouble("starTimeMillis", (double) estimatedDriveInfo.startTimeMillis);
@@ -85,7 +85,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
 
     @Override
     public void onLocationSettingsChange(Context context, ZendriveLocationSettingsResult locationSettingsResult) {
-        Log.i(TAG, "LocationSettingsChange detected");
+        Log.i(TAG, "LocationSettingsChange detected: " + locationSettingsResult.toString());
         WritableMap params = new WritableNativeMap();
         WritableArray errorsList = new WritableNativeArray();
         for (ZendriveLocationSettingsResult.Error error: locationSettingsResult.errors) {
@@ -97,7 +97,7 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
 
     @Override
     public void onLocationPermissionsChange(Context context, boolean granted) {
-        Log.i(TAG, "LocationPermissionsChange detected");
+        Log.i(TAG, "LocationPermissionsChange detected: granted=" + granted);
         WritableMap params = new WritableNativeMap();
         params.putBoolean("granted", granted);
         ZendriveModule.sendEvent("locationPermissionsChange", params, context);
@@ -105,13 +105,13 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
 
     @Override
     public void onDriveAnalyzed(Context context, AnalyzedDriveInfo analyzedDriverInfo) {
-        Log.i(TAG, "DriveAnalyzed detected");
+        Log.i(TAG, "DriveAnalyzed detected: " + analyzedDriverInfo.toString());
         WritableMap params = new WritableNativeMap();
         params.putString("sessionId", analyzedDriverInfo.sessionId);
         params.putString("trackingId", analyzedDriverInfo.trackingId);
         params.putString("driveId", analyzedDriverInfo.driveId);
         params.putString("driveType", analyzedDriverInfo.driveType.toString());
-        params.putString("userMode", analyzedDriverInfo.userMode.toString());
+//        params.putString("userMode", analyzedDriverInfo.userMode.toString());
 
         params.putInt("zendriveScore", analyzedDriverInfo.score.zendriveScore);
         params.putDouble("starTimeMillis", (double) analyzedDriverInfo.startTimeMillis);
