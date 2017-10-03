@@ -68,7 +68,7 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 		ZendriveDriverAttributes driverAttributes = new ZendriveDriverAttributes();
 		driverAttributes.setFirstName(firstName);
 		driverAttributes.setLastName(lastName);
-		driverAttributes.setEmail(email)
+		driverAttributes.setEmail(email);
 		// 	driverAttributes.setPhoneNumber(driver.getString("phoneNumber"));
 
 		ZendriveConfiguration zendriveConfiguration = new ZendriveConfiguration(key, driverId);
