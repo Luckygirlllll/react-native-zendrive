@@ -62,12 +62,13 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public void init(String key, String driverId, ReadableMap driver, final Callback callback) {
+  public void init(String key, String driverId, String firstName, String lastName, String email,
+      final Callback callback) {
 		ZendriveDriverAttributes zendriveDriverAttributes = new ZendriveDriverAttributes();
 		ZendriveDriverAttributes driverAttributes = new ZendriveDriverAttributes();
-		driverAttributes.setFirstName(driver.getString("firstName"));
-		driverAttributes.setLastName(driver.getString("lastName"));
-		driverAttributes.setEmail(driver.getString("email"));
+		driverAttributes.setFirstName(firstName);
+		driverAttributes.setLastName(lastName);
+		driverAttributes.setEmail(email)
 		// 	driverAttributes.setPhoneNumber(driver.getString("phoneNumber"));
 
 		ZendriveConfiguration zendriveConfiguration = new ZendriveConfiguration(key, driverId);
