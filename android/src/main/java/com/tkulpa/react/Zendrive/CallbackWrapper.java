@@ -19,7 +19,7 @@ public class CallbackWrapper implements ZendriveOperationCallback {
         if (result.isSuccess()) {
             callback.invoke(false, result.toString());
         } else {
-            callback.invoke(result.getErrorCode().toString());
+            callback.invoke(result.getErrorMessage());
         }
     }
 }
