@@ -7,119 +7,105 @@
 //
 
 #import "ZendriveDelegateManager.h"
-#import <Foundation/Foundation.h>
-
-#import <ZendriveSDK/ZendriveDriveStartInfo.h>
-#import <ZendriveSDK/ZendriveDriveResumeInfo.h>
-#import <ZendriveSDK/ZendriveDriveInfo.h>
 
 @implementation ZendriveDelegateManager
 
-- (NSArray<NSString *> *)supportedEvents
-{
-    return @[@"accident", @"driveStart", @"driveResume", @"driveEnd", @"locationPermissionsApproved", @"locationPermissionsDenied", @"driveAnalyzed"];
-}
-
-
-
 - (void)processStartOfDrive:(ZendriveDriveStartInfo *)startInfo {
-    NSLog(@"Start of Drive invoked");
-    [self sendEventWithName:@"driveStart" body:@{
-                                                 @"sessionId": [startInfo sessionId],
-                                                 @"trackingId": [startInfo trackingId],
-                                                 @"starTimeMillis": [NSNumber numberWithLongLong:[startInfo startTimestamp]],
-                                                }
-     ];
+    ZendriveWrapper *zendriveWrapper = [ZendriveWrapper allocWithZone: nil];
+    RCTLogInfo(@"Start of Drive invoked");
+
+    NSDictionary *body = [NSDictionary dictionaryWithObjectsAndKeys:
+      [startInfo sessionId], @"sessionId",
+      [startInfo trackingId], @"trackingId",
+      [NSNumber numberWithLongLong:[startInfo startTimestamp]], @"starTimeMillis",
+      nil
+    ];
+
+    [zendriveWrapper sendEventWithName:@"driveStart" body:body];
 }
 
 - (void)processResumeOfDrive:(ZendriveDriveResumeInfo *)driveResumeInfo {
-    NSLog(@"Resume of Drive invoked");
-    [self sendEventWithName:@"driveResume" body:@{
-                                                 @"sessionId": [driveResumeInfo sessionId],
-                                                 @"trackingId": [driveResumeInfo trackingId],
-                                                 @"driveGapStartTimestampMillis": [NSNumber numberWithLongLong:[driveResumeInfo driveGapStartTimestampMillis]],
-                                                 @"driveGapEndTimestampMillis": [NSNumber numberWithLongLong:[driveResumeInfo driveGapEndTimestampMillis]],
-                                                 }
-     ];
+    ZendriveWrapper *zendriveWrapper = [ZendriveWrapper allocWithZone: nil];
+    RCTLogInfo(@"Resume of Drive invoked");
+
+    NSDictionary *body = [NSDictionary dictionaryWithObjectsAndKeys:
+      [driveResumeInfo sessionId], @"sessionId",
+      [driveResumeInfo trackingId], @"trackingId",
+      [NSNumber numberWithLongLong:[driveResumeInfo driveGapStartTimestampMillis]], @"driveGapStartTimestampMillis",
+      [NSNumber numberWithLongLong:[driveResumeInfo driveGapEndTimestampMillis]], @"driveGapEndTimestampMillis",
+      nil
+    ];
+    [zendriveWrapper sendEventWithName:@"driveResume" body:body];
 }
 
 - (void)processEndOfDrive:(ZendriveEstimatedDriveInfo *)driveEndInfo {
-    NSLog(@"End of Drive invoked");
-    
-    [self sendEventWithName:@"driveEnd" body:@{
-                                               @"sessionId": [driveEndInfo sessionId],
-                                               @"trackingId": [driveEndInfo trackingId],
-                                               @"driveId": [driveEndInfo driveId],
-                                               @"driveType": [NSNumber numberWithInt: [driveEndInfo driveType]],
-                                               @"zendriveScore": [NSNumber numberWithInt:[[driveEndInfo score] zendriveScore]],
-                                               @"starTimeMillis": [NSNumber numberWithLongLong:[driveEndInfo startTimestamp]],
-                                               @"endTimeMillis": [NSNumber numberWithLongLong:[driveEndInfo endTimestamp]],
-                                               @"averageSpeed": [NSNumber numberWithDouble:[driveEndInfo averageSpeed]],
-                                               @"distanceMeters": [NSNumber numberWithDouble:[driveEndInfo distance]],
-                                               @"maxSpeed": [NSNumber numberWithDouble:[driveEndInfo maxSpeed]],
-                                              }
-     ];
+    ZendriveWrapper *zendriveWrapper = [ZendriveWrapper allocWithZone: nil];
+    RCTLogInfo(@"End of Drive invoked");
+
+    NSDictionary *body = [NSDictionary dictionaryWithObjectsAndKeys:
+      [driveEndInfo sessionId], @"sessionId",
+      [driveEndInfo trackingId], @"trackingId",
+      [driveEndInfo driveId], @"driveId",
+      [NSNumber numberWithInt: [driveEndInfo driveType]], @"driveType",
+      [NSNumber numberWithInt:[[driveEndInfo score] zendriveScore]], @"zendriveScore",
+      [NSNumber numberWithLongLong:[driveEndInfo startTimestamp]], @"starTimeMillis",
+      [NSNumber numberWithLongLong:[driveEndInfo endTimestamp]], @"endTimeMillis",
+      [NSNumber numberWithDouble:[driveEndInfo averageSpeed]], @"averageSpeed",
+      [NSNumber numberWithDouble:[driveEndInfo distance]], @"distanceMeters",
+      [NSNumber numberWithDouble:[driveEndInfo maxSpeed]], @"maxSpeed",
+      nil
+    ];
+    [zendriveWrapper sendEventWithName:@"driveEnd" body:body];
 }
 
 - (void)processAnalysisOfDrive:(ZendriveAnalyzedDriveInfo *)analyzedDriverInfo {
-    NSLog(@"Analysis of Drive invoked");
-    
-    [self sendEventWithName:@"driveAnalyzed" body:@{
-                                                            @"sessionId": [analyzedDriverInfo sessionId],
-                                                            @"trackingId": [analyzedDriverInfo trackingId],
-                                                            @"driveId": [analyzedDriverInfo driveId],
-                                                            @"driveType": [NSNumber numberWithInt: [analyzedDriverInfo driveType]],
-                                                            @"zendriveScore": [NSNumber numberWithInt:[[analyzedDriverInfo score] zendriveScore]],
-                                                            @"starTimeMillis": [NSNumber numberWithLongLong:[analyzedDriverInfo startTimestamp]],
-                                                            @"endTimeMillis": [NSNumber numberWithLongLong:[analyzedDriverInfo endTimestamp]],
-                                                            @"averageSpeed": [NSNumber numberWithDouble:[analyzedDriverInfo averageSpeed]],
-                                                            @"distanceMeters": [NSNumber numberWithDouble:[analyzedDriverInfo distance]],
-                                                            @"maxSpeed": [NSNumber numberWithDouble:[analyzedDriverInfo maxSpeed]],
-                                                           }
-     ];
+    ZendriveWrapper *zendriveWrapper = [ZendriveWrapper allocWithZone: nil];
+    RCTLogInfo(@"Analysis of Drive invoked");
+
+    NSDictionary *body = [NSDictionary dictionaryWithObjectsAndKeys:
+      [analyzedDriverInfo sessionId], @"sessionId",
+      [analyzedDriverInfo trackingId], @"trackingId",
+      [analyzedDriverInfo driveId], @"driveId",
+      [NSNumber numberWithInt: [analyzedDriverInfo driveType]], @"driveType",
+      [NSNumber numberWithInt:[[analyzedDriverInfo score] zendriveScore]], @"zendriveScore",
+      [NSNumber numberWithLongLong:[analyzedDriverInfo startTimestamp]], @"starTimeMillis",
+      [NSNumber numberWithLongLong:[analyzedDriverInfo endTimestamp]], @"endTimeMillis",
+      [NSNumber numberWithDouble:[analyzedDriverInfo averageSpeed]], @"averageSpeed",
+      [NSNumber numberWithDouble:[analyzedDriverInfo distance]], @"distanceMeters",
+      [NSNumber numberWithDouble:[analyzedDriverInfo maxSpeed]], @"maxSpeed",
+      nil
+    ];
+    [zendriveWrapper sendEventWithName:@"driveAnalyzed" body:body];
 }
 
 - (void)processLocationDenied {
-    NSLog(@"User denied Location to Zendrive SDK.");
-    [self sendEventWithName:@"processLocationDenied" body:@{}];
+    ZendriveWrapper *zendriveWrapper = [ZendriveWrapper allocWithZone: nil];
+    RCTLogInfo(@"User denied Location to Zendrive SDK.");
+    [zendriveWrapper sendEventWithName:@"locationDenied" body:@{}];
 }
 
 - (void)processLocationApproved   {
-    NSLog(@"User approved Location to Zendrive SDK.");
-    [self sendEventWithName:@"processLocationApproved" body:@{}];
+    ZendriveWrapper *zendriveWrapper = [ZendriveWrapper allocWithZone: nil];
+    RCTLogInfo(@"User approved Location to Zendrive SDK.");
+    [zendriveWrapper sendEventWithName:@"locationApproved" body:@{}];
 }
 
 - (void)processAccidentDetected:(ZendriveAccidentInfo *)accidentInfo {
-    NSLog(@"Accident detected by Zendrive SDK.");
-    
-    [self sendEventWithName:@"accident" body:@{
-                                               @"sessionId": [accidentInfo sessionId],
-                                               @"trackingId": [accidentInfo trackingId],
-                                               @"driveId": [accidentInfo driveId],
-                                               @"accidentId": [accidentInfo accidentId],
-                                               @"timestamp  Millis": [NSNumber numberWithDouble:[accidentInfo timestamp]],
-                                               @"confidence": [NSNumber numberWithInt:[accidentInfo confidence]],
-                                               @"locationLat": [NSNumber numberWithDouble:[[accidentInfo accidentLocation] latitude]],
-                                               @"locationLon": [NSNumber numberWithDouble:[[accidentInfo accidentLocation] longitude]],
-                                               }
-     ];
+    ZendriveWrapper *zendriveWrapper = [ZendriveWrapper allocWithZone: nil];
+    RCTLogInfo(@"Accident detected by Zendrive SDK.");
+
+    NSDictionary *body = [NSDictionary dictionaryWithObjectsAndKeys:
+      [accidentInfo sessionId], @"sessionId",
+      [accidentInfo trackingId], @"trackingId",
+      [accidentInfo driveId], @"driveId",
+      [accidentInfo accidentId], @"accidentId",
+      [NSNumber numberWithDouble:[accidentInfo timestamp]], @"timestampMillis",
+      [NSNumber numberWithInt:[accidentInfo confidence]], @"confidence",
+      [NSNumber numberWithDouble:[[accidentInfo accidentLocation] latitude]], @"locationLat",
+      [NSNumber numberWithDouble:[[accidentInfo accidentLocation] longitude]], @"locationLon",
+      nil
+    ];
+    [zendriveWrapper sendEventWithName:@"accident" body:body];
 }
 
-
 @end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

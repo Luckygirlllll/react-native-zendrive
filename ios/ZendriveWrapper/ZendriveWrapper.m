@@ -3,13 +3,20 @@
 
 @implementation ZendriveWrapper
 
-- (dispatch_queue_t)methodQueue
-{
-    return dispatch_get_main_queue();
-}
-
 RCT_EXPORT_MODULE();
 
++ (id)allocWithZone:(NSZone *)zone {
+    static ZendriveWrapper *sharedWrapper = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedWrapper = [super allocWithZone:zone];
+    });
+    return sharedWrapper;
+}
+
+- (NSArray<NSString *> *)supportedEvents {
+  return @[@"accident", @"driveStart", @"driveResume", @"driveEnd", @"locationApproved", @"locationDenied", @"driveAnalyzed"];
+}
 
 RCT_EXPORT_METHOD(
                   init:(NSString *)key
@@ -20,32 +27,35 @@ RCT_EXPORT_METHOD(
                   callback:(RCTResponseSenderBlock)callback)
 {
     id<ZendriveDelegateProtocol> zdDelegate = [[ZendriveDelegateManager alloc] init];
-//    self.zendriveDelegate = zdDelegate; // keep a strong reference to the delegate object
-    
+    self.zendriveDelegate = zdDelegate; // keep a strong reference to the delegate object
+
     ZendriveConfiguration *configuration = [[ZendriveConfiguration alloc] init];
     ZendriveDriverAttributes *driverAttributes = [[ZendriveDriverAttributes alloc] init];
-    
+
     configuration.applicationKey = key;
     configuration.driverId = driverId;
-    
+
     [driverAttributes setFirstName:firstName];
     [driverAttributes setLastName:lastName];
     [driverAttributes setEmail:email];
-    
+
     configuration.driverAttributes = driverAttributes;
     configuration.driveDetectionMode = ZendriveDriveDetectionModeAutoON;
-    
+
     [Zendrive setupWithConfiguration:configuration
                             delegate:zdDelegate // Can be nil
                    completionHandler:^(BOOL success, NSError *error) {
                        if(success) {
+                          RCTLogInfo(@"Init success");
                            callback(@[[NSNull null]]);
                        } else {
+                           RCTLogInfo(@"Init error: %@", [error localizedDescription]);
+                           RCTLogInfo(@"Init error: %@", [error localizedFailureReason]);
+                           RCTLogInfo(@"Init error: %@", [error localizedRecoveryOptions]);
+                           RCTLogInfo(@"Init error: %@", [error localizedRecoverySuggestion]);
                            callback(@[[error description]]);
                        }
                    }];
-    
-//    RCTLogInfo(@"Pretending to create an event %@ at %@", name, location);
 }
 
 RCT_EXPORT_METHOD(isSetup:(RCTResponseSenderBlock)callback)
@@ -78,7 +88,7 @@ RCT_EXPORT_METHOD(stopDrive:(NSString *)id callback:(RCTResponseSenderBlock)call
     }
 }
 
-RCT_EXPORT_METHOD(triggerAccident:(NSString *)id callback:(RCTResponseSenderBlock)callback){
+RCT_EXPORT_METHOD(triggerAccident:(RCTResponseSenderBlock)callback){
     if(![Zendrive isAccidentDetectionSupportedByDevice]) {
         callback(@[@"Zendrive collision detection is not supported on this device"]);
     } else {
@@ -114,4 +124,3 @@ RCT_EXPORT_METHOD(stopSession){
     [Zendrive stopSession];
 }
 @end
-  
