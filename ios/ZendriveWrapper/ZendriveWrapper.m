@@ -60,7 +60,7 @@ RCT_EXPORT_METHOD(
 
 RCT_EXPORT_METHOD(isSetup:(RCTResponseSenderBlock)callback)
 {
-    callback(@[@(NO), @([Zendrive isSDKSetup])]);
+    callback(@[[NSNull null], @([Zendrive isSDKSetup])]);
 }
 
 
