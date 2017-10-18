@@ -6,12 +6,33 @@
 //  Copyright © 2017 Facebook. All rights reserved.
 //
 #import <Foundation/Foundation.h>
-#import <React/RCTLog.h>
 
-#import <ZendriveSDK/Zendrive.h>
-#import <ZendriveSDK/ZendriveDriveStartInfo.h>
-#import <ZendriveSDK/ZendriveDriveResumeInfo.h>
-#import <ZendriveSDK/ZendriveDriveInfo.h>
+#if __has_include("RCTLog.h")
+  #import "RCTLog.h"
+#else
+  #import <React/RCTLog.h>
+#endif
+
+#if __has_include("Zendrive.h")
+  #import "Zendrive.h"
+#else
+  #import <ZendriveSDK/Zendrive.h>
+#endif
+#if __has_include("ZendriveDriveStartInfo.h")
+  #import "ZendriveDriveStartInfo.h"
+#else
+  #import <ZendriveSDK/ZendriveDriveStartInfo.h>
+#endif
+#if __has_include("ZendriveDriveResumeInfo.h")
+  #import "ZendriveDriveResumeInfo.h"
+#else
+  #import <ZendriveSDK/ZendriveDriveResumeInfo.h>
+#endif
+#if __has_include("ZendriveDriveInfo.h")
+  #import "ZendriveDriveInfo.h"
+#else
+  #import <ZendriveSDK/ZendriveDriveInfo.h>
+#endif
 
 #import "ZendriveWrapper.h"
 
