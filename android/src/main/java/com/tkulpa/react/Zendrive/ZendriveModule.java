@@ -34,14 +34,19 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 		this.reactContext = reactContext;
 	}
 
-	public static void sendEvent(String eventName, @Nullable WritableMap params, Context context) {
+	public static ReactContext getContext(Context ctx) {
 		ReactContext rContext;
 		if (reactContext == null) {
 			Log.e(TAG, "no available ReactContext, trying to create from Context");
-			rContext = new ReactApplicationContext(context);
+			rContext = new ReactApplicationContext(ctx);
 		} else {
 			rContext = reactContext;
 		}
+		return rContext;
+	}
+
+	public static void sendEvent(String eventName, @Nullable WritableMap params, Context context) {
+		ReactContext rContext = ZendriveModule.getContext(context);
 
 		if (rContext != null && rContext.hasActiveCatalystInstance()) {
 			try {
@@ -86,12 +91,14 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 
 	@ReactMethod
 	public void isSetup(final Callback callback) {
-		callback.invoke(false, Zendrive.isSDKSetup());
+//		ReactApplicationContext ctx = this.getReactApplicationContext();
+//		ReactContext rContext = ZendriveModule.getContext(ctx);
+		callback.invoke(false, Zendrive.isSDKSetup(this.getReactApplicationContext()));
 	}
 
 	@ReactMethod
 	public void getState(final Callback callback) {
-		ZendriveState zendriveState = Zendrive.getZendriveState();
+		ZendriveState zendriveState = Zendrive.getZendriveState(this.getReactApplicationContext());
 		WritableMap params = new WritableNativeMap();
 		params.putBoolean("isDriveInProgress", zendriveState.isDriveInProgress);
 		params.putBoolean("isForegroundService", zendriveState.isForegroundService);
@@ -104,12 +111,12 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 
 	@ReactMethod
 	public void startDrive(String id, final Callback callback) {
-		Zendrive.startDrive(id, new CallbackWrapper(callback));
+		Zendrive.startDrive(this.getReactApplicationContext(), id, new CallbackWrapper(callback));
 	}
 
 	@ReactMethod
 	public void stopDrive(String id, final Callback callback) {
-		Zendrive.stopDrive(id, new CallbackWrapper(callback));
+		Zendrive.stopDrive(this.getReactApplicationContext(), id, new CallbackWrapper(callback));
 	}
 
 	@ReactMethod
@@ -132,21 +139,21 @@ public class ZendriveModule extends ReactContextBaseJavaModule {
 		} else {
 			driveDetectionMode = ZendriveDriveDetectionMode.AUTO_OFF;
 		}
-		Zendrive.setZendriveDriveDetectionMode(driveDetectionMode, new CallbackWrapper(callback));
+		Zendrive.setZendriveDriveDetectionMode(this.getReactApplicationContext(), driveDetectionMode, new CallbackWrapper(callback));
 	}
 
 	@ReactMethod
 	public void shutdown(final Callback callback) {
-		Zendrive.teardown(new CallbackWrapper(callback));
+		Zendrive.teardown(this.getReactApplicationContext(), new CallbackWrapper(callback));
 	}
 
 	@ReactMethod
 	public void startSession(String id) {
-		Zendrive.startSession(id);
+		Zendrive.startSession(this.getReactApplicationContext(), id);
 	}
 
 	@ReactMethod
 	public void stopSession() {
-		Zendrive.stopSession();
+		Zendrive.stopSession(this.getReactApplicationContext());
 	}
 }
