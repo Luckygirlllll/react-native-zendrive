@@ -11,7 +11,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
-import com.zendrive.sdk.ZendriveLocationSettingsResult;
+//import com.zendrive.sdk.ZendriveLocationSettingsResult;
 
 
 /**
@@ -36,14 +36,14 @@ public class NotificationUtility {
      * @return the created notifcation.
      */
     public static Notification createLocationPermissionDeniedNotification(Context context) {
-        createNotificationChannels(context);
+        //createNotificationChannels(context);
         // TODO: The click intent should not point to location settings. Perhaps we can load
         // the app permissions tab.
-        Intent callGPSSettingIntent = new Intent(
-                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
-                callGPSSettingIntent, 0);
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_template_icon_bg);
+        // Intent callGPSSettingIntent = new Intent(
+        //         android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+        // PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
+        //         callGPSSettingIntent, 0);
+        // Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_template_icon_bg);
 
         return new NotificationCompat.Builder(context.getApplicationContext(), LOCATION_CHANNEL_KEY)
                 .setContentTitle(context.getResources().getString(R.string.location_permission_denied))
@@ -51,9 +51,9 @@ public class NotificationUtility {
                 .setContentText(context.getResources().getString(R.string.grant_location_permission))
                 .setSmallIcon(R.drawable.notification_template_icon_bg)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
+                // .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
                 .setCategory(Notification.CATEGORY_ERROR)
-                .setContentIntent(pendingIntent)
+                // .setContentIntent(pendingIntent)
                 .build();
     }
 
@@ -63,31 +63,31 @@ public class NotificationUtility {
      * @param settingsResult to get potential resolution from play services
      * @return the created notifcation.
      */
-    public static Notification createLocationSettingDisabledNotification(Context context,
-                                                                         ZendriveLocationSettingsResult settingsResult) {
-        createNotificationChannels(context);
-        if (BuildConfig.DEBUG && settingsResult.isSuccess()) {
-            throw new AssertionError("Only expected failed settings result");
-        }
-        // TODO: use the result from the callback and show appropriate message and intent
-        Intent callGPSSettingIntent = new Intent(
-                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
-                callGPSSettingIntent, 0);
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
-                R.drawable.notification_template_icon_bg);
+    // public static Notification createLocationSettingDisabledNotification(Context context,
+    //                                                                      ZendriveLocationSettingsResult settingsResult) {
+    //     createNotificationChannels(context);
+    //     if (BuildConfig.DEBUG && settingsResult.isSuccess()) {
+    //         throw new AssertionError("Only expected failed settings result");
+    //     }
+    //     // TODO: use the result from the callback and show appropriate message and intent
+    //     Intent callGPSSettingIntent = new Intent(
+    //             android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+    //     PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
+    //             callGPSSettingIntent, 0);
+    //     Bitmap icon = BitmapFactory.decodeResource(context.getResources(),
+    //             R.drawable.notification_template_icon_bg);
 
-        return new NotificationCompat.Builder(context.getApplicationContext(), LOCATION_CHANNEL_KEY)
-                .setContentTitle(context.getResources().getString(R.string.location_disabled))
-                .setTicker(context.getResources().getString(R.string.location_disabled))
-                .setContentText(context.getResources().getString(R.string.enable_location))
-                .setSmallIcon(R.drawable.notification_template_icon_bg)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
-                .setContentIntent(pendingIntent)
-                .setCategory(Notification.CATEGORY_ERROR)
-                .build();
-    }
+    //     return new NotificationCompat.Builder(context.getApplicationContext(), LOCATION_CHANNEL_KEY)
+    //             .setContentTitle(context.getResources().getString(R.string.location_disabled))
+    //             .setTicker(context.getResources().getString(R.string.location_disabled))
+    //             .setContentText(context.getResources().getString(R.string.enable_location))
+    //             .setSmallIcon(R.drawable.notification_template_icon_bg)
+    //             .setPriority(NotificationCompat.PRIORITY_MAX)
+    //             .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
+    //             .setContentIntent(pendingIntent)
+    //             .setCategory(Notification.CATEGORY_ERROR)
+    //             .build();
+    // }
 
     /**
      * Create a notification that is displayed when the Zendrive SDK
@@ -97,10 +97,10 @@ public class NotificationUtility {
      * @return the created notifcation.
      */
     public static Notification createMaybeInDriveNotification(Context context) {
-        createNotificationChannels(context);
+        // createNotificationChannels(context);
 
-        // suppresses deprecated warning for setPriority(PRIORITY_MIN)
-        //noinspection deprecation
+        // // suppresses deprecated warning for setPriority(PRIORITY_MIN)
+        // //noinspection deprecation
         return new NotificationCompat.Builder(context, FOREGROUND_CHANNEL_KEY)
                 .setSmallIcon(R.drawable.notification_template_icon_bg)
                 .setContentTitle(context.getResources().getString(R.string.app_name))
@@ -118,7 +118,7 @@ public class NotificationUtility {
      * @return the created notifcation.
      */
     public static Notification createInDriveNotification(Context context) {
-        createNotificationChannels(context);
+        // createNotificationChannels(context);
 
         return new NotificationCompat.Builder(context, FOREGROUND_CHANNEL_KEY)
                 .setSmallIcon(R.drawable.notification_template_icon_bg)
@@ -128,20 +128,20 @@ public class NotificationUtility {
     }
 
     private static void createNotificationChannels(Context context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationManager manager = context.getSystemService(NotificationManager.class);
-            NotificationChannel lowPriorityNotificationChannel = new NotificationChannel(FOREGROUND_CHANNEL_KEY,
-                    context.getResources().getString(R.string.trip_tracking),
-                    NotificationManager.IMPORTANCE_MIN);
-            lowPriorityNotificationChannel.setShowBadge(false);
-            manager.createNotificationChannel(lowPriorityNotificationChannel);
+        // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        //     NotificationManager manager = context.getSystemService(NotificationManager.class);
+        //     NotificationChannel lowPriorityNotificationChannel = new NotificationChannel(FOREGROUND_CHANNEL_KEY,
+        //             context.getResources().getString(R.string.trip_tracking),
+        //             NotificationManager.IMPORTANCE_MIN);
+        //     lowPriorityNotificationChannel.setShowBadge(false);
+        //     manager.createNotificationChannel(lowPriorityNotificationChannel);
 
-            NotificationChannel defaultNotificationChannel = new NotificationChannel
-                    (LOCATION_CHANNEL_KEY, context.getResources().getString(R.string.problems),
-                            NotificationManager.IMPORTANCE_DEFAULT);
-            defaultNotificationChannel.setShowBadge(true);
-            manager.createNotificationChannel(defaultNotificationChannel);
-        }
+        //     NotificationChannel defaultNotificationChannel = new NotificationChannel
+        //             (LOCATION_CHANNEL_KEY, context.getResources().getString(R.string.problems),
+        //                     NotificationManager.IMPORTANCE_DEFAULT);
+        //     defaultNotificationChannel.setShowBadge(true);
+        //     manager.createNotificationChannel(defaultNotificationChannel);
+        // }
     }
 
 //    private static PendingIntent getNotificationClickIntent(Context context) {
@@ -152,3 +152,4 @@ public class NotificationUtility {
 //    }
 
 }
+

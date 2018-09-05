@@ -23,9 +23,9 @@ public class ZendrivePackage implements ReactPackage {
         return modules;
     }
 
-     public List<Class<? extends JavaScriptModule>> createJSModules() {
-         return Collections.emptyList();
-     }
+    public List<Class<? extends JavaScriptModule>> createJSModules() {
+        return Collections.emptyList();
+    }
 
     @Override
     public List<ViewManager> createViewManagers(ReactApplicationContext reactContext) {

@@ -1,13 +1,13 @@
 package com.tkulpa.react.Zendrive;
 
 import com.facebook.react.bridge.WritableNativeArray;
+import android.content.Intent;
 import com.zendrive.sdk.AccidentInfo;
 import com.zendrive.sdk.AnalyzedDriveInfo;
 import com.zendrive.sdk.DriveResumeInfo;
 import com.zendrive.sdk.DriveStartInfo;
 import com.zendrive.sdk.EstimatedDriveInfo;
 import com.zendrive.sdk.ZendriveBroadcastReceiver;
-import com.zendrive.sdk.ZendriveLocationSettingsResult;
 
 import android.content.Context;
 import android.util.Log;
@@ -84,22 +84,11 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
     }
 
     @Override
-    public void onLocationSettingsChange(Context context, ZendriveLocationSettingsResult locationSettingsResult) {
-        Log.i(TAG, "LocationSettingsChange detected: " + locationSettingsResult.toString());
+    public void onZendriveSettingsConfigChanged(Context context, boolean errorsFound,
+                                                boolean warningsFound) {
         WritableMap params = new WritableNativeMap();
-        WritableArray errorsList = new WritableNativeArray();
-        for (ZendriveLocationSettingsResult.Error error: locationSettingsResult.errors) {
-            errorsList.pushString(error.toString());
-        }
-        params.putArray("locationSettingsErrors", errorsList);
-        ZendriveModule.sendEvent("locationSettingsChange", params, context);
-    }
-
-    @Override
-    public void onLocationPermissionsChange(Context context, boolean granted) {
-        Log.i(TAG, "LocationPermissionsChange detected: granted=" + granted);
-        WritableMap params = new WritableNativeMap();
-        params.putBoolean("granted", granted);
+        params.putBoolean("errorsFound", errorsFound);
+        params.putBoolean("warningsFound", warningsFound);
         ZendriveModule.sendEvent("locationPermissionsChange", params, context);
     }
 
@@ -125,5 +114,8 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
 //        params.putMap("waypoints", Arguments.fromArray());
         ZendriveModule.sendEvent("driveAnalyzed", params, context);
     }
+
+
+
 
 }
