@@ -3,6 +3,8 @@ yarn add
 
 react-native link react-native-zendrive
 
+compatible with ZendriveSDK:5.5.0
+
 #  How to use:
 
 ## Android
