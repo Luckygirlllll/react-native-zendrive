@@ -35,27 +35,27 @@ public class NotificationUtility {
      * @param context App context
      * @return the created notifcation.
      */
-    public static Notification createLocationPermissionDeniedNotification(Context context) {
-        createNotificationChannels(context);
-        // TODO: The click intent should not point to location settings. Perhaps we can load
-        // the app permissions tab.
-        Intent callGPSSettingIntent = new Intent(
-                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
-                callGPSSettingIntent, 0);
-        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_template_icon_bg);
-
-        return new NotificationCompat.Builder(context.getApplicationContext(), LOCATION_CHANNEL_KEY)
-                .setContentTitle(context.getResources().getString(R.string.location_permission_denied))
-                .setTicker(context.getResources().getString(R.string.location_permission_denied))
-                .setContentText(context.getResources().getString(R.string.grant_location_permission))
-                .setSmallIcon(R.drawable.notification_template_icon_bg)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
-                .setCategory(Notification.CATEGORY_ERROR)
-                .setContentIntent(pendingIntent)
-                .build();
-    }
+//    public static Notification createLocationPermissionDeniedNotification(Context context) {
+//        createNotificationChannels(context);
+//        // TODO: The click intent should not point to location settings. Perhaps we can load
+//        // the app permissions tab.
+//        Intent callGPSSettingIntent = new Intent(
+//                android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(context.getApplicationContext(), 0,
+//                callGPSSettingIntent, 0);
+//        Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.notification_template_icon_bg);
+//
+//        return new NotificationCompat.Builder(context.getApplicationContext(), LOCATION_CHANNEL_KEY)
+//                .setContentTitle(context.getResources().getString(R.string.location_permission_denied))
+//                .setTicker(context.getResources().getString(R.string.location_permission_denied))
+//                .setContentText(context.getResources().getString(R.string.grant_location_permission))
+//                .setSmallIcon(R.drawable.notification_template_icon_bg)
+//                .setPriority(NotificationCompat.PRIORITY_MAX)
+//                .setLargeIcon(Bitmap.createScaledBitmap(icon, 128, 128, false))
+//                .setCategory(Notification.CATEGORY_ERROR)
+//                .setContentIntent(pendingIntent)
+//                .build();
+//    }
 
     /**
      * Create a notification when high accuracy location is disabled on the device.
