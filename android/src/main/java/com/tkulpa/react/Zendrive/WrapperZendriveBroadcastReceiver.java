@@ -115,6 +115,14 @@ public class WrapperZendriveBroadcastReceiver extends ZendriveBroadcastReceiver 
         ZendriveModule.sendEvent("driveAnalyzed", params, context);
     }
 
+//    @Override
+//    public void onLocationPermissionsChange(Context context, boolean granted) {
+//        WritableMap params = new WritableNativeMap();
+//        params.putBoolean("granted", granted);
+//        ZendriveModule.sendEvent("locationPermissionsChange", params, context);
+//
+//    }
+
 
 
 
